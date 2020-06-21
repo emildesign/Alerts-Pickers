@@ -174,7 +174,10 @@ public struct Contacts {
         var contacts: [CNContact] = [CNContact]()
         let predicate: NSPredicate
 
-        if string.endIndex.encodedOffset > 0 {
+        let indexInt = string.endIndex.utf16Offset(in: string)
+        
+        if indexInt > 0 {
+//        if string.endIndex.encodedOffset > 0 {
             predicate = CNContact.predicateForContacts(matchingName: string)
         } else {
             predicate = CNContact.predicateForContactsInContainer(withIdentifier: CNContactStore().defaultContainerIdentifier())

@@ -177,6 +177,11 @@ final public class ContactsPickerViewController: UIViewController {
                 self.alertController?.dismiss(animated: true)
             }
             alert.show()
+        @unknown default:
+            /// This case means the user is prompted for the first time for allowing contacts
+            Contacts.requestAccess { [unowned self] bool, error in
+                self.checkStatus(completionHandler: completionHandler)
+            }
         }
     }
     
@@ -298,7 +303,7 @@ extension ContactsPickerViewController: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
         if searchController.isActive { return 0 }
         tableView.scrollToRow(at: IndexPath(row: 0, section: index), at: .top , animated: false)
-        return sortedContactKeys.index(of: title)!
+        return sortedContactKeys.firstIndex(of: title)!
     }
     
     public func sectionIndexTitles(for tableView: UITableView) -> [String]? {
