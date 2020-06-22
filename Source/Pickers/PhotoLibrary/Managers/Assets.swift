@@ -11,6 +11,11 @@ private struct AssetManager: Hashable {
     var hashValue: Int {
         return size.width.hashValue ^ size.height.hashValue
     }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(size.width)
+        hasher.combine(size.height)
+    }
 }
 
 public struct Assets {
