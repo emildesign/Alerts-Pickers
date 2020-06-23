@@ -14,7 +14,7 @@ public final class CollectionViewPhotoCell: CollectionViewCustomContentCell<UIIm
         }
     }
     
-    private var loadingIndicator = UIActivityIndicatorView.init(style: .gray)
+    private var loadingIndicator = UIActivityIndicatorView.init(style: .medium)
     
     public override func layoutSubviews() {
         

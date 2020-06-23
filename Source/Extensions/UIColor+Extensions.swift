@@ -117,26 +117,45 @@ extension UIColor {
      - parameter hexString: HEX String in "#363636" format
      - returns: UIColor from HexString
      */
-    convenience init(hexString: String) {
-        
-        let hexString: String       = (hexString as NSString).trimmingCharacters(in: .whitespacesAndNewlines)
-        let scanner                 = Scanner(string: hexString as String)
-        
-        if hexString.hasPrefix("#") {
-            scanner.scanLocation = 1
+//    convenience init(hexString: String) {
+//
+//        let hexString: String       = (hexString as NSString).trimmingCharacters(in: .whitespacesAndNewlines)
+//        let scanner                 = Scanner(string: hexString as String)
+//
+//        if hexString.hasPrefix("#") {
+//            //scanner.scanLocation = 1
+//            scanner.currentIndex = 1
+//        }
+//        var color: UInt32 = 0
+//        scanner.scanHexInt32(&color)
+//
+//        let mask = 0x000000FF
+//        let r = Int(color >> 16) & mask
+//        let g = Int(color >> 8) & mask
+//        let b = Int(color) & mask
+//
+//        let red   = CGFloat(r) / 255.0
+//        let green = CGFloat(g) / 255.0
+//        let blue  = CGFloat(b) / 255.0
+//        self.init(red:red, green:green, blue:blue, alpha:1)
+//    }
+    
+    convenience init(hex: String, alpha: CGFloat = 1.0) {
+        var hexFormatted: String = hex.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).uppercased()
+
+        if hexFormatted.hasPrefix("#") {
+            hexFormatted = String(hexFormatted.dropFirst())
         }
-        var color: UInt32 = 0
-        scanner.scanHexInt32(&color)
-        
-        let mask = 0x000000FF
-        let r = Int(color >> 16) & mask
-        let g = Int(color >> 8) & mask
-        let b = Int(color) & mask
-        
-        let red   = CGFloat(r) / 255.0
-        let green = CGFloat(g) / 255.0
-        let blue  = CGFloat(b) / 255.0
-        self.init(red:red, green:green, blue:blue, alpha:1)
+
+        assert(hexFormatted.count == 6, "Invalid hex code used.")
+
+        var rgbValue: UInt64 = 0
+        Scanner(string: hexFormatted).scanHexInt64(&rgbValue)
+
+        self.init(red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+                  green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+                  blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+                  alpha: alpha)
     }
     
     /// Create UIColor from RGB values with optional transparency.

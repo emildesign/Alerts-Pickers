@@ -221,12 +221,28 @@ public struct Telephone {
         if UIApplication.shared.canOpenURL(NSURL(string: "tel://")! as URL) {
             // Check if iOS Device supports phone calls
             // User will get an alert error when they will try to make a phone call in airplane mode
-            if let mnc: String = CTTelephonyNetworkInfo().subscriberCellularProvider?.mobileNetworkCode, !mnc.isEmpty {
-                // iOS Device is capable for making calls
-                completionHandler(true)
+            
+            let ct = CTTelephonyNetworkInfo()
+            if #available(iOS 12.0, *) {
+                ct.serviceSubscriberCellularProvidersDidUpdateNotifier = { (carrier) in
+                    // carrier is a String
+                    if !carrier.isEmpty {
+                        completionHandler(true)
+                    } else {
+                        completionHandler(false)
+                    }
+                }
             } else {
-                // Device cannot place a call at this time. SIM might be removed
-                completionHandler(false)
+                ct.subscriberCellularProviderDidUpdateNotifier = { (carrier) in
+                    // carrier is a CTCarrier
+                    if let mnc:String = carrier.mobileNetworkCode, !mnc.isEmpty {
+                        // iOS Device is capable for making calls
+                        completionHandler(true)
+                    } else {
+                        // Device cannot place a call at this time. SIM might be removed
+                        completionHandler(false)
+                    }
+                }
             }
         } else {
             // iOS Device is not capable for making calls

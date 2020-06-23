@@ -17,7 +17,7 @@ extension UIAlertController {
         
         // TODO: for iPad or other views
         let isPad: Bool = UIDevice.current.userInterfaceIdiom == .pad
-        let root = UIApplication.shared.keyWindow?.rootViewController?.view
+        let root = UIWindow.key?.rootViewController?.view
         
         //self.responds(to: #selector(getter: popoverPresentationController))
         if let source = source {
@@ -58,7 +58,7 @@ extension UIAlertController {
         }
         
         DispatchQueue.main.async {
-            UIApplication.shared.keyWindow?.rootViewController?.present(self, animated: animated, completion: completion)
+            UIWindow.key?.rootViewController?.present(self, animated: animated, completion: completion)
             if vibrate {
                 AudioServicesPlayAlertSound(kSystemSoundID_Vibrate)
             }
